@@ -63,19 +63,22 @@ execMovTM x (c,s,E) = execEqualMov x s c
 
 jAux (Just x) = x
 
-execTM (q,a,g,delta,i,f) (u,s,v)  = do if (s==f) then  do
-                                                        putStrLn "Execution Ended Successfully"
-                                                        putStrLn ("Final Configuration: "++(show (u,s,v)))
-                                       else do 
-                                               let x = (delta (head v, s))
-                                                   m = (q,a,g,delta,i,f)
-                                               if (x == Nothing) then putStrLn ("No Valid Transitions from: " ++ (show (u,s,v)))
-                                               else do
-                                                      let y = execMovTM (u,s,v) (jAux x)
-                                                      if (y == Nothing) then putStrLn "Invalid Movement"
-                                                      else do
-                                                           putStrLn ((show (head v, s))++"->"++(show (jAux x))++" = "++(show (jAux y)))
-                                                           execTM m (jAux y)
+validateMov :: TuringMachine -> Maybe Config -> IO ()
+validateMov m Nothing  = putStrLn "Invalid Movement"
+validateMov m (Just x) = do
+                         putStrLn (show x)
+                         execTM m x
+
+validateTrans :: TuringMachine -> Config -> Maybe DeltaOutput -> IO ()
+validateTrans m (u,s,v) Nothing    = putStrLn ("No Valid Transitions from: " ++ (show (u,s,v)))
+validateTrans m (u,s,v) (Just x)   = do
+                                     putStr ((show (head v,s))++"->"++(show x)++" = ")
+                                     validateMov m (execMovTM (u,s,v) x)
+
+execTM (q,a,g,delta,i,f) (u,s,v)  | (s==f)       = do
+                                                   putStrLn "Execution Ended Successfully"
+                                                   putStrLn ("Final Configuration: "++(show (u,s,v)))
+                                  | otherwise    = validateTrans (q,a,g,delta,i,f) (u,s,v) (delta (head v,s))
 
 
 exampleDF :: DeltaFunction
@@ -89,7 +92,6 @@ exampleTM = ([1,2,3],"ab","abB",exampleDF,1,3)
 exampleInitialConfig :: Config
 exampleInitialConfig = ([],1,"a")
 
-execExample = do
-              putStrLn ("Initial Configuration " ++ (show exampleInitialConfig))
-              execTM exampleTM ([],1,"a")          
+execExample :: IO()
+execExample = execTM exampleTM ([],1,"a")          
                                             
