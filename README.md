@@ -23,7 +23,7 @@ Example:
 Let's assume cursor positioned at 'c' location,
 Tape = "abbbcdddddBBBBBBB...",
 then
-C = ("abbb",<some_state>, "dddddBBBBBBB...")
+C = ("abbb",some_state, "dddddBBBBBBB...")
 
 Assumptions
 ==========
