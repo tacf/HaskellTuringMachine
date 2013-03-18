@@ -38,6 +38,8 @@ type TuringMachine = (  SetState,
 
 execTM       :: TuringMachine -> Config -> IO() 
 execMovTM    :: Config -> DeltaOutput  -> Maybe Config
+validateMov :: TuringMachine -> Maybe Config -> IO ()
+validateTrans :: TuringMachine -> Config -> Maybe DeltaOutput -> IO ()
 
 execRightMov      :: Config -> State -> Char -> Maybe Config
 execLeftMov       :: Config -> State -> Char -> Maybe Config
@@ -61,24 +63,24 @@ execMovTM x (c,s,L) = execLeftMov x s c
 execMovTM x (c,s,E) = execEqualMov x s c
 
 
-jAux (Just x) = x
-
-validateMov :: TuringMachine -> Maybe Config -> IO ()
+-- Check if a movement is valid
 validateMov m Nothing  = putStrLn "Invalid Movement"
 validateMov m (Just x) = do
                          putStrLn (show x)
                          execTM m x
 
-validateTrans :: TuringMachine -> Config -> Maybe DeltaOutput -> IO ()
+-- Check if deltaFunction has image for transition at current Tape state
 validateTrans m (u,s,v) Nothing    = putStrLn ("No Valid Transitions from: " ++ (show (u,s,v)))
 validateTrans m (u,s,v) (Just x)   = do
                                      putStr ((show (head v,s))++"->"++(show x)++" = ")
                                      validateMov m (execMovTM (u,s,v) x)
 
+-- Executes Turing Machine
 execTM (q,a,g,delta,i,f) (u,s,v)  | (s==f)       = do
                                                    putStrLn "Execution Ended Successfully"
                                                    putStrLn ("Final Configuration: "++(show (u,s,v)))
                                   | otherwise    = validateTrans (q,a,g,delta,i,f) (u,s,v) (delta (head v,s))
+
 
 
 exampleDF :: DeltaFunction
