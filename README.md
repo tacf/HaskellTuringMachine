@@ -20,14 +20,19 @@ A configuration is a triple C = (v,s,u)
  - u is the from the cursor position to "infinity"
 
 Example:
-        Let's assume cursor positioned at 'c' location
-              Tape = "abbbcdddddBBBBBBB..."
-        then
-              C = ("abbb",<some_state>, "dddddBBBBBBB...")
+
+	Let's assume cursor positioned at 'c' location
+
+	Tape = "abbbcdddddBBBBBBB..."
+
+     	then
+
+        C = ("abbb",<some_state>, "dddddBBBBBBB...")
 
 Assumptions
 ==========
 
-   For simplicity reasons is assumed that the TM tape is infinite 
+	For simplicity reasons is assumed that the TM tape is infinite 
 and  is filled with blank characters(B) after the users input 
+
 (ex: "abcBBBBBBBB...", where "abc" is the user input)
