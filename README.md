@@ -20,8 +20,8 @@ A configuration is a triple C = (v,s,u)
  - u is the from the cursor position to "infinity"
 
 Example:
-Let's assume cursor positioned at 'c' location
-Tape = "abbbcdddddBBBBBBB..."
+Let's assume cursor positioned at 'c' location,
+Tape = "abbbcdddddBBBBBBB...",
 then
 C = ("abbb",<some_state>, "dddddBBBBBBB...")
 
